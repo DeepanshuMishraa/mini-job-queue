@@ -1,8 +1,10 @@
-
 package utils
 
+import (
+	"log"
 
-import "github.com/redis/go-redis/v9"
+	"github.com/redis/go-redis/v9"
+)
 
 func Connect(url string) (*redis.Client, error) {
 	opts, err := redis.ParseURL(url)
@@ -10,5 +12,6 @@ func Connect(url string) (*redis.Client, error) {
 		return nil, err
 	}
 	rdb := redis.NewClient(opts)
+	log.Println("Connected To Redis")
 	return rdb, nil
 }
