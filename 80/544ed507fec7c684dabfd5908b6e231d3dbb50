@@ -1,0 +1,19 @@
+handlers/job_handler.go
+  s_155d1d46d9fafd::t_e71ba33f40ea45 3-43
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "80544ed507fec7c684dabfd5908b6e231d3dbb50",
+  "prompts": {},
+  "sessions": {
+    "s_155d1d46d9fafd": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_12415894affeopYOEIBF5hiWnR",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Deepanshu Mishra <d4deepanshu723@gmail.com>"
+    }
+  }
+}
