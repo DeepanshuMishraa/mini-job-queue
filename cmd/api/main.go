@@ -19,10 +19,14 @@ func main() {
 	}
 
 	_, err = db.ConnectDB(cfg.DATABASE_URL)
-	_ = utils.Connect(cfg.REDIS_ADDRESS, cfg.REDIS_PASSWORD)
-
 	if err != nil {
 		log.Fatal("Failed to connect to the database with error: ", err)
+	}
+
+	_, err = utils.Connect(cfg.REDIS_URL)
+
+	if err != nil {
+		log.Fatal("Failed to connect to redis with error: ", err)
 	}
 
 	app.Get("/", func(c fiber.Ctx) error {
