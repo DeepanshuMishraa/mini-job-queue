@@ -6,6 +6,7 @@ import (
 
 	"github.com/DeepanshuMishraa/mini-job-queue/config"
 	"github.com/DeepanshuMishraa/mini-job-queue/db"
+	"github.com/DeepanshuMishraa/mini-job-queue/utils"
 	"github.com/gofiber/fiber/v3"
 )
 
@@ -18,6 +19,7 @@ func main() {
 	}
 
 	_, err = db.ConnectDB(cfg.DATABASE_URL)
+	_ = utils.Connect(cfg.REDIS_ADDRESS, cfg.REDIS_PASSWORD)
 
 	if err != nil {
 		log.Fatal("Failed to connect to the database with error: ", err)
