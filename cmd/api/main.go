@@ -1,18 +1,17 @@
 package main
 
 import (
-	"fmt"
-	"log"
-
 	"github.com/DeepanshuMishraa/mini-job-queue/config"
 	"github.com/DeepanshuMishraa/mini-job-queue/db"
 	"github.com/DeepanshuMishraa/mini-job-queue/utils"
-	"github.com/gofiber/fiber/v3"
+	"github.com/gin-gonic/gin"
+	"log"
 )
 
 func main() {
 	cfg, err := config.Load()
-	app := fiber.New()
+	router := gin.Default()
+	router.SetTrustedProxies(nil)
 
 	if err != nil {
 		log.Fatal("Failed to load env vars")
@@ -29,11 +28,7 @@ func main() {
 		log.Fatal("Failed to connect to redis with error: ", err)
 	}
 
-	app.Get("/", func(c fiber.Ctx) error {
-		return c.SendString("Hello World")
-	})
+	log.Println("[API] SERVER RUNNING ON PORT: ", cfg.PORT)
 
-	fmt.Println("[API-SERVER] running on ", cfg.PORT)
-
-	log.Fatal(app.Listen(":" + cfg.PORT))
+	router.Run(":" + cfg.PORT)
 }
