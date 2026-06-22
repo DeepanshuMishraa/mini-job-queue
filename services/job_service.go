@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"database/sql"
+	"log"
 	"math/rand"
 	"time"
 
@@ -65,6 +66,7 @@ func (s *JobService) ProcessJob(
 		time.Duration(rand.Intn(61)) *
 			time.Second
 
+	log.Printf("processing time for job %s is %v", job.JobID, processingTime)
 	time.Sleep(processingTime)
 
 	err = repository.UpdateJobByID(
