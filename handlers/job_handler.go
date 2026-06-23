@@ -19,6 +19,8 @@ func CreateJobHandler(jobService *services.JobService) gin.HandlerFunc {
 			return
 		}
 
+		userId, _ := c.Get("user_id")
+
 		status := models.QUEUED
 		if req.Status != "" {
 			status = models.Status(req.Status)
@@ -28,7 +30,7 @@ func CreateJobHandler(jobService *services.JobService) gin.HandlerFunc {
 			JobName:   req.JobName,
 			JobStatus: status,
 			Payload:   req.Payload,
-			UserId:    req.UserId,
+			UserId:    userId.(string),
 		}
 
 		createdJob, err := jobService.CreateJobService(job)
@@ -62,8 +64,8 @@ func GetJobHandler(db *sql.DB) gin.HandlerFunc {
 
 func GetAllJobHandler(db *sql.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		userID := c.Param("id")
-		jobs, err := repository.GetAllJobs(db, userID)
+		userId, _ := c.Get("user_id")
+		jobs, err := repository.GetAllJobs(db, userId.(string))
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"error": err.Error(),

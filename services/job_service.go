@@ -20,7 +20,7 @@ type JobService struct {
 }
 
 func (s *JobService) CreateJobService(job models.Job) (*models.Job, error) {
-	createdJob, err := repository.CreateJob(s.DB, job)
+	createdJob, err := repository.CreateJob(s.DB, job, job.UserId)
 
 	if err != nil {
 		return nil, err
