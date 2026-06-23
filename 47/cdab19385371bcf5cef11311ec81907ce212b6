@@ -1,0 +1,24 @@
+cmd/api/main.go
+  s_915cdfd20ea37a::t_915d258343f292 51
+handlers/job_handler.go
+  s_915cdfd20ea37a::t_827665f62dddd3 22-23,33
+  s_915cdfd20ea37a::t_072a870f6a3b4d 67-68
+services/job_service.go
+  s_915cdfd20ea37a::t_b83d764f18220a 23
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "47cdab19385371bcf5cef11311ec81907ce212b6",
+  "prompts": {},
+  "sessions": {
+    "s_915cdfd20ea37a": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_10b4e33a2ffeb26nZ1LKcEqHgH",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Deepanshu Mishra <d4deepanshu723@gmail.com>"
+    }
+  }
+}
