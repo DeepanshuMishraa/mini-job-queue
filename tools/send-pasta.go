@@ -6,11 +6,13 @@ import (
 	"time"
 )
 
-func SendPasta(who string) {
+func SendPasta(who string) error {
 	log.Println("Sending Pasta to: ", who)
 	time.Sleep(time.Duration(rand.Intn(31)) * time.Second)
 	log.Println("Pasta Sent Successfully")
 	log.Printf("%s is eating the pasta", who)
 	time.Sleep(time.Duration(rand.Intn(5)) * time.Second)
 	log.Println("Pasta has been eaten, they thank you!")
+
+	return nil
 }

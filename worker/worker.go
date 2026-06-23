@@ -2,14 +2,14 @@ package worker
 
 import (
 	"context"
-	"database/sql"
 	"log"
 
+	"github.com/DeepanshuMishraa/mini-job-queue/config"
 	"github.com/DeepanshuMishraa/mini-job-queue/services"
 	"github.com/redis/go-redis/v9"
 )
 
-func RunWorker(db *sql.DB, rd *redis.Client, service *services.JobService) {
+func RunWorker(cfg *config.Config, rd *redis.Client, service *services.JobService) {
 	ctx := context.Background()
 
 	for {
@@ -28,7 +28,7 @@ func RunWorker(db *sql.DB, rd *redis.Client, service *services.JobService) {
 
 		log.Printf("Job picked by %s", jobId)
 
-		_, err = service.ProcessJob(db, jobId)
+		_, err = service.ProcessJob(jobId, cfg)
 
 		if err != nil {
 			log.Println(err)

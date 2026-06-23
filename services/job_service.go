@@ -3,12 +3,14 @@ package services
 import (
 	"context"
 	"database/sql"
-	"log"
-	"math/rand"
-	"time"
+	"encoding/json"
+	"fmt"
 
+	"github.com/DeepanshuMishraa/mini-job-queue/config"
 	"github.com/DeepanshuMishraa/mini-job-queue/models"
 	"github.com/DeepanshuMishraa/mini-job-queue/repository"
+	"github.com/DeepanshuMishraa/mini-job-queue/tools"
+	"github.com/DeepanshuMishraa/mini-job-queue/types"
 	"github.com/redis/go-redis/v9"
 )
 
@@ -39,46 +41,62 @@ func (s *JobService) CreateJobService(job models.Job) (*models.Job, error) {
 }
 
 func (s *JobService) ProcessJob(
-	db *sql.DB,
 	jobID string,
+	cfg *config.Config,
 ) (*models.Job, error) {
 
-	job, err := repository.GetJobById(
-		db,
-		jobID,
-	)
-
+	job, err := repository.GetJobById(s.DB, jobID)
 	if err != nil {
 		return nil, err
 	}
 
-	err = repository.UpdateJobByID(
-		db,
-		job.JobID,
-		models.RUNNING,
-	)
-
+	err = repository.UpdateJobByID(s.DB, job.JobID, models.RUNNING)
 	if err != nil {
 		return nil, err
 	}
 
-	processingTime :=
-		time.Duration(rand.Intn(61)) *
-			time.Second
+	var runErr error
+	switch job.JobName {
+	case "send_email":
+		var payload types.EmailPayload
+		payloadBytes, marshalErr := json.Marshal(job.Payload)
+		if marshalErr != nil {
+			runErr = marshalErr
+			break
+		}
 
-	log.Printf("processing time for job %s is %v", job.JobID, processingTime)
-	time.Sleep(processingTime)
+		if unmarshalErr := json.Unmarshal(payloadBytes, &payload); unmarshalErr != nil {
+			runErr = unmarshalErr
+			break
+		}
 
-	err = repository.UpdateJobByID(
-		db,
-		job.JobID,
-		models.FINISHED,
-	)
+		runErr = tools.SendEmail(cfg, payload.To, payload.Subject, payload.Body)
 
-	if err != nil {
-		return nil, err
+	case "send_pasta":
+		var payload types.SendPastaPayload
+		payloadBytes, marshalErr := json.Marshal(job.Payload)
+		if marshalErr != nil {
+			runErr = marshalErr
+			break
+		}
+
+		if unmarshalErr := json.Unmarshal(payloadBytes, &payload); unmarshalErr != nil {
+			runErr = unmarshalErr
+			break
+		}
+
+		runErr = tools.SendPasta(payload.Who)
+
+	default:
+		runErr = fmt.Errorf("unknown job type: %s", job.JobName)
 	}
 
+	if runErr != nil {
+		_ = repository.UpdateJobByID(s.DB, job.JobID, models.FAILED)
+		return nil, runErr
+	}
+
+	_ = repository.UpdateJobByID(s.DB, job.JobID, models.FINISHED)
 	job.JobStatus = models.FINISHED
 
 	return job, nil

@@ -39,7 +39,7 @@ func main() {
 		Redis: redis,
 	}
 
-	go worker.RunWorker(dbx, redis, jobService)
+	go worker.RunWorker(cfg, redis, jobService)
 
 	protectedRouter := router.Group("/api")
 	protectedRouter.Use(middleware.AuthMiddleware(cfg))

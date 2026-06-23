@@ -9,7 +9,7 @@ import (
 	"github.com/DeepanshuMishraa/mini-job-queue/models"
 )
 
-func CreateJob(db *sql.DB, job models.Job) (*models.Job, error) {
+func CreateJob(db *sql.DB, job models.Job, userId string) (*models.Job, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -20,8 +20,9 @@ func CreateJob(db *sql.DB, job models.Job) (*models.Job, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	createdJob := &models.Job{}
-	err = db.QueryRowContext(ctx, query, job.JobName, payloadByte, job.UserId).Scan(
+	err = db.QueryRowContext(ctx, query, job.JobName, payloadByte, userId).Scan(
 		&createdJob.JobID,
 		&createdJob.JobName,
 		&createdJob.JobStatus,

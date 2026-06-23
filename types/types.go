@@ -32,3 +32,13 @@ type CreateJobResponse struct {
 	JobName string `json:"job_name"`
 	Status  string `json:"status"`
 }
+
+type EmailPayload struct {
+	To      string `json:"to"`
+	Subject string `json:"subject"`
+	Body    string `json:"body"`
+}
+
+type SendPastaPayload struct {
+	Who string `json:"who"`
+}
